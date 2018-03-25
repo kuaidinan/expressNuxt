@@ -1,0 +1,49 @@
+{
+  "name": "expressnuxt",
+  "version": "1.0.0",
+  "description": "Nuxt.js project",
+  "author": "kuaidinan <352789535@qq.com>",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development backpack dev",
+    "build": "nuxt build && backpack build",
+    "start": "cross-env NODE_ENV=production node build/main.js",
+    "precommit": "npm run lint",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "watch-ts": "tsc --watch --project tsconfig.json",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Nuxt\" -c \"yellow.bold,cyan.bold\" \"npm run watch-ts\" \"npm run dev\""
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "config-lite": "^2.1.0",
+    "connect-history-api-fallback": "^1.5.0",
+    "cross-env": "^5.0.1",
+    "express": "^4.15.3",
+    "ioredis": "^3.2.2",
+    "mongoose": "^5.0.11",
+    "nuxt": "^1.0.0-rc3",
+    "request": "^2.85.0",
+    "sha1": "^1.1.1",
+    "source-map-support": "^0.4.15"
+  },
+  "devDependencies": {
+    "@types/connect-history-api-fallback": "^1.3.1",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/express": "^4.11.1",
+    "@types/request": "^2.47.0",
+    "babel-eslint": "^7.2.3",
+    "backpack-core": "^0.4.1",
+    "concurrently": "^3.5.1",
+    "cross-env": "^5.1.4",
+    "eslint": "^4.3.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-html": "^3.1.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
