@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+// import axios from '~/plugins/axios'
 
 export default {
   async asyncData () {
-    let { data } = await axios.get('/api/users')
+    let { data } = [1, 2, 3]
     return { users: data }
   },
   head () {

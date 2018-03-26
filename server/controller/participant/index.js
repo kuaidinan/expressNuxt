@@ -8,21 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getList = function (req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            res.send({
-                text: '123'
-            });
-        }
-        catch (err) {
-            throw new Error(err);
-        }
-    });
-};
-exports.test = '123';
-function hh() {
-    console.log(1);
+class Participant {
+    getList(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                res.send({
+                    text: '123'
+                });
+            }
+            catch (err) {
+                throw new Error(err);
+            }
+        });
+    }
 }
-exports.default = hh;
+exports.default = Participant;
 //# sourceMappingURL=index.js.map

@@ -1,3 +1,3 @@
-import { Router } from 'express';
-declare const router: Router;
-export default router;
+import { Express } from 'express';
+declare const _default: (app: Express) => void;
+export default _default;
