@@ -1,1 +1,1 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../serverTs/index.ts"],"names":[],"mappings":"AACA,OAAO,CAAC,qBAAqB,CAAC,CAAC;AAC/B,OAAO,CAAC,OAAO,CAAC,CAAC","sourcesContent":["// require('babel-register');\r\nrequire('babel-core/register');\r\nrequire('./app');"]}
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../serverTs/index.ts"],"names":[],"mappings":"AAEA,OAAO,CAAC,OAAO,CAAC,CAAC","sourcesContent":["// require('babel-register');\r\n// require('babel-core/register');\r\nrequire('./app');"]}

@@ -73,13 +73,80 @@ class Wechat {
     requestAuth(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack');
-            console.log('redirectUrl', redirectUrl);
             res.redirect(redirectUrl);
         });
     }
     callBack(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.redirect('/static/');
+            function resolveAfter2Seconds(x) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log('1');
+                        resolve(x);
+                    }, 4000);
+                });
+            }
+            function resolveAfter2Seconds2(x) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log('2');
+                        resolve(x);
+                    }, 1000);
+                });
+            }
+            function add1(x) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    var a = yield resolveAfter2Seconds(20);
+                    var b = yield resolveAfter2Seconds2(30);
+                });
+            }
+            add1(10).then(v => {
+                console.log(v);
+            });
+            const wechat = new Wechat();
+            console.log(wechat.getAuthPageToken);
+            const authPageToken = yield wechat.getAuthPageToken(req.query.code);
+            console.log('authPageToken', authPageToken);
+            const updateAuthPageToken = yield wechat.updateAuthPageToken(authPageToken.refresh_token);
+            console.log('updateAuthPageToken', updateAuthPageToken);
+            res.send('成功');
+        });
+    }
+    getAuthPageToken(code) {
+        return new Promise((resolve, reject) => {
+            utils_1.fetch({
+                url: `${config.wechat.prefixApi}/sns/oauth2/access_token?appid=${config.wechat.appID}&secret=${config.wechat.appSecret}&code=${code}&grant_type=authorization_code`,
+                method: 'get'
+            }).then((result) => {
+                resolve(result);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
+    updateAuthPageToken(refreshToken) {
+        console.log('refreshToken', refreshToken);
+        return new Promise((resolve, reject) => {
+            utils_1.fetch({
+                url: `${config.wechat.prefixApi}/sns/oauth2/refresh_token?appid=${config.wechat.appID}&grant_type=refresh_token&refresh_token=${refreshToken}`,
+                method: 'get'
+            }).then((result) => {
+                resolve(result);
+            }).catch((error) => {
+                reject(error);
+            });
+        });
+    }
+    getUser(accessToken, openid) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return utils_1.fetch({
+                url: `${config.wechat.prefixApi}/sns/userinfo?access_token=${accessToken}&openid=${openid}&lang=zh_CN`,
+                method: 'get'
+            }).then((result) => {
+                return Promise.resolve(result);
+            }).catch((error) => {
+                return Promise.reject(error);
+            });
         });
     }
 }

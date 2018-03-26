@@ -16,22 +16,22 @@ app.set('port', port)
 
 const config = require('config-lite')(__dirname);
 
-// app.all('*', (req:Request, res:Response, next:NextFunction) => {
-// 	// const origin = req.headers.origin;
-// 	// res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
-// 	res.header("Access-Control-Allow-Origin", '*');
-// 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-// 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-//   	res.header("Access-Control-Allow-Credentials", 'true'); //可以带cookies
-// 	res.header("X-Powered-By", '3.2.1')
-// 	res.header("Content-Type", 'text/html; charset=utf-8')
-// 	res.header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36');
-// 	if (req.method == 'OPTIONS') {
-// 	  	res.send(200);
-// 	} else {
-// 	    next();
-// 	}
-// });
+app.all('*', (req:Request, res:Response, next:NextFunction) => {
+	// const origin = req.headers.origin;
+	// res.header("Access-Control-Allow-Origin", req.headers.origin || '*');
+	res.header("Access-Control-Allow-Origin", '*');
+	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  	res.header("Access-Control-Allow-Credentials", 'true'); //可以带cookies
+	res.header("X-Powered-By", '3.2.1')
+	res.header("Content-Type", 'text/html; charset=utf-8')
+	res.header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36');
+	if (req.method == 'OPTIONS') {
+	  	res.send(200);
+	} else {
+	    next();
+	}
+});
 mongoose.connect(config.url).then((result:any) => {
 	console.log('mongoose is connect')
 }).catch((error:any) => {
@@ -60,7 +60,6 @@ if (nuxtConfig.dev) {
 
 // Give nuxt middleware to express
 app.use(nuxt.render)
-
 // 自定义微信订单
 // startCreateMenu()
 

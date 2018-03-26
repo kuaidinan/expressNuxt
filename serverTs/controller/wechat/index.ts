@@ -62,26 +62,80 @@ export default class Wechat {
         })
     }
     public async requestAuth(req:Request,res:Response) {
-        // return fetch({
-        //     url:`${config.wechat.openPrefix}/connect/oauth2/authorize?appid=${config.wechat.appID}&redirect_uri=${encodeURIComponent(config.domain)}&response_type=code&scope=snsapi_base&state=STATEHello#wechat_redirect`,
-        //     // method:'get',
-        //     encoding :null,
-        // }).then((result:any) => {
-        //     console.log(`${config.wechat.openPrefix}/connect/oauth2/authorize?appid=${config.wechat.appID}&redirect_uri=${encodeURIComponent(config.domain)}&response_type=code&scope=snsapi_base&state=STATEHello#wechat_redirect`)
-        //     var buf
-        //     buf =  iconv.decode(result, 'gb2312');
-        //     return Promise.resolve(buf)
-        // }).catch((error) => {
-        //     return Promise.reject(error)
-        // })
-        // 返回后的地址http://wechat.xuqiang.site/?code=071SiFZ80OcTZH1JquW80As5090SiFZ8&state=STATEHello
         const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack')
-        console.log('redirectUrl',redirectUrl)
-        // res.redirect(`${config.wechat.openPrefix}/connect/oauth2/authorize?appid=${config.wechat.appID}&redirect_uri=${encodeURIComponent(config.domain)}&response_type=code&scope=snsapi_userinfo&state=STATEHello#wechat_redirect`)
         res.redirect(redirectUrl)
     }
-    public async callBack(req:Request,res:Response,next:NextFunction) {
-        res.redirect('/static/')
+    async callBack(req:Request,res:Response,next:NextFunction) {
+        function resolveAfter2Seconds(x:any) {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                console.log('1')
+                resolve(x);
+              }, 4000);
+            });
+          }
+          function resolveAfter2Seconds2(x:any) {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                console.log('2')
+                resolve(x);
+              }, 1000);
+            });
+          }
+          async function add1(x:any) { 
+            var a = await resolveAfter2Seconds(20); 
+            var b = await resolveAfter2Seconds2(30); 
+          }
+          add1(10).then(v => { 
+            console.log(v); // prints 60 after 4 seconds. 
+          });
+        const wechat = new Wechat()
+        console.log(wechat.getAuthPageToken)
+        const authPageToken:any = await wechat.getAuthPageToken(req.query.code)
+        console.log('authPageToken',authPageToken)
+        const updateAuthPageToken:any = await wechat.updateAuthPageToken(authPageToken.refresh_token)
+        console.log('updateAuthPageToken',updateAuthPageToken)
+        // const userInfo = await wechat.getUser(authPageToken.access_token,authPageToken.openid)
+        // console.log('userInfo',userInfo)
+        res.send('成功')
+    }
+    // 获取openId和网页授权token
+    getAuthPageToken(code:string) {
+        return new Promise((resolve,reject) => {
+            fetch({
+                url:`${config.wechat.prefixApi}/sns/oauth2/access_token?appid=${config.wechat.appID}&secret=${config.wechat.appSecret}&code=${code}&grant_type=authorization_code`,
+                method:'get'
+            }).then((result) => {
+                resolve(result)
+            }).catch((error) => {
+                reject(error)
+            })
+        }) 
+    }
+    // 刷新网页授权token
+    updateAuthPageToken(refreshToken:string) {
+        console.log('refreshToken',refreshToken)
+        return new Promise((resolve,reject) => {
+            fetch({
+                url:`${config.wechat.prefixApi}/sns/oauth2/refresh_token?appid=${config.wechat.appID}&grant_type=refresh_token&refresh_token=${refreshToken}`,
+                method:'get'
+            }).then((result) => {
+                resolve(result)
+            }).catch((error) => {
+                reject(error)
+            })
+        })
+    }
+    // 获取用户信息
+    public async getUser(accessToken:string,openid:string) {
+        return fetch({
+            url:`${config.wechat.prefixApi}/sns/userinfo?access_token=${accessToken}&openid=${openid}&lang=zh_CN`,
+            method:'get'
+        }).then((result) => {
+            return Promise.resolve(result)
+        }).catch((error) => {
+            return Promise.reject(error)
+        })
     }
 }
 

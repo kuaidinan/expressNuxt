@@ -6,5 +6,8 @@ export default class Wechat {
     createMenu(): Promise<{}>;
     requestAuth(req: Request, res: Response): Promise<void>;
     callBack(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getAuthPageToken(code: string): Promise<{}>;
+    updateAuthPageToken(refreshToken: string): Promise<{}>;
+    getUser(accessToken: string, openid: string): Promise<{}>;
 }
 export declare function startCreateMenu(): Promise<void>;

@@ -1,10 +1,9 @@
 <template>
-  <div>
-  </div>
+  <div>auth</div>
 </template>
-
 <script>
+
 export default {
-  name: 'defualt'
+  name: 'auth'
 }
 </script>

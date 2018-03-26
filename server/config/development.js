@@ -23,6 +23,7 @@ module.exports = {
         "appID": "wx6ec464893a6c970e",
         "appSecret": "40c415d310b81e73476a8d8a0673869a",
         "token": "wxexpress",
+        "prefixApi": "https://api.weixin.qq.com",
         "prefix": "https://api.weixin.qq.com/cgi-bin",
         "mpPrefix": "https://mp.weixin.qq.com/cgi-bin",
         "openPrefix": "https://open.weixin.qq.com",
