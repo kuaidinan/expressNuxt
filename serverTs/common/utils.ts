@@ -60,3 +60,11 @@ export function getRedis(keyName:String) {
         })
     })
 }
+
+export function stringToObject(val:string|object) {
+    if (typeof val === 'string') {
+        return JSON.parse(val)
+    } else if (typeof val === 'object') {
+        return val;
+    }
+}

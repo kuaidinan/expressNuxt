@@ -78,37 +78,13 @@ class Wechat {
     }
     callBack(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            function resolveAfter2Seconds(x) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        console.log('1');
-                        resolve(x);
-                    }, 4000);
-                });
-            }
-            function resolveAfter2Seconds2(x) {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        console.log('2');
-                        resolve(x);
-                    }, 1000);
-                });
-            }
-            function add1(x) {
-                return __awaiter(this, void 0, void 0, function* () {
-                    var a = yield resolveAfter2Seconds(20);
-                    var b = yield resolveAfter2Seconds2(30);
-                });
-            }
-            add1(10).then(v => {
-                console.log(v);
-            });
             const wechat = new Wechat();
-            console.log(wechat.getAuthPageToken);
-            const authPageToken = yield wechat.getAuthPageToken(req.query.code);
-            console.log('authPageToken', authPageToken);
-            const updateAuthPageToken = yield wechat.updateAuthPageToken(authPageToken.refresh_token);
-            console.log('updateAuthPageToken', updateAuthPageToken);
+            let authPageToken = yield wechat.getAuthPageToken(req.query.code);
+            let updateAuthPageTokens = yield wechat.updateAuthPageToken(utils_1.stringToObject(authPageToken).refresh_token);
+            updateAuthPageTokens = utils_1.stringToObject(updateAuthPageTokens);
+            console.log('updateAuthPageTokens', updateAuthPageTokens);
+            let userinfo = yield wechat.getUser(updateAuthPageTokens.access_token, updateAuthPageTokens.openid);
+            console.log('userinfo', userinfo);
             res.send('成功');
         });
     }

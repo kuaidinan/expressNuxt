@@ -2,7 +2,7 @@
 
 import { Request,Response,NextFunction } from 'express';
 import * as HttpRequest from "request";
-import { sign,fetch,saveRedis,getRedis } from '../../common/utils';
+import { sign,fetch,saveRedis,getRedis,stringToObject } from '../../common/utils';
 import { getAccessToken } from '../common/index';
 import { resolve } from 'path';
 import Auth from '../../common/auth'
@@ -66,37 +66,13 @@ export default class Wechat {
         res.redirect(redirectUrl)
     }
     async callBack(req:Request,res:Response,next:NextFunction) {
-        function resolveAfter2Seconds(x:any) {
-            return new Promise(resolve => {
-              setTimeout(() => {
-                console.log('1')
-                resolve(x);
-              }, 4000);
-            });
-          }
-          function resolveAfter2Seconds2(x:any) {
-            return new Promise(resolve => {
-              setTimeout(() => {
-                console.log('2')
-                resolve(x);
-              }, 1000);
-            });
-          }
-          async function add1(x:any) { 
-            var a = await resolveAfter2Seconds(20); 
-            var b = await resolveAfter2Seconds2(30); 
-          }
-          add1(10).then(v => { 
-            console.log(v); // prints 60 after 4 seconds. 
-          });
-        const wechat = new Wechat()
-        console.log(wechat.getAuthPageToken)
-        const authPageToken:any = await wechat.getAuthPageToken(req.query.code)
-        console.log('authPageToken',authPageToken)
-        const updateAuthPageToken:any = await wechat.updateAuthPageToken(authPageToken.refresh_token)
-        console.log('updateAuthPageToken',updateAuthPageToken)
-        // const userInfo = await wechat.getUser(authPageToken.access_token,authPageToken.openid)
-        // console.log('userInfo',userInfo)
+        const wechat = new Wechat();
+        let authPageToken:any = await wechat.getAuthPageToken(req.query.code)
+        let updateAuthPageTokens:any = await wechat.updateAuthPageToken(stringToObject(authPageToken).refresh_token)
+        updateAuthPageTokens = stringToObject(updateAuthPageTokens)
+        console.log('updateAuthPageTokens',updateAuthPageTokens)
+        let userinfo = await wechat.getUser(updateAuthPageTokens.access_token,updateAuthPageTokens.openid)
+        console.log('userinfo',userinfo)
         res.send('成功')
     }
     // 获取openId和网页授权token

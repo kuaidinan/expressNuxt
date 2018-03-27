@@ -58,4 +58,13 @@ function getRedis(keyName) {
     });
 }
 exports.getRedis = getRedis;
+function stringToObject(val) {
+    if (typeof val === 'string') {
+        return JSON.parse(val);
+    }
+    else if (typeof val === 'object') {
+        return val;
+    }
+}
+exports.stringToObject = stringToObject;
 //# sourceMappingURL=utils.js.map
