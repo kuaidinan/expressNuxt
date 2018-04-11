@@ -5,9 +5,8 @@ import * as HttpRequest from "request";
 import { sign,fetch,saveRedis,getRedis,stringToObject } from '../../common/utils';
 import { getAccessToken } from '../common/index';
 import { resolve } from 'path';
-import Auth from '../../common/auth'
-const iconv = require('iconv-lite');
-const sha1 = require('sha1'); 
+import Auth from '../../common/auth';
+import Users from '../../models/wechat/user'
 const config = require('config-lite')(__dirname);
 const auth = new Auth()
 
@@ -62,6 +61,7 @@ export default class Wechat {
         })
     }
     public async requestAuth(req:Request,res:Response) {
+        // 微信回调接口
         const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack')
         res.redirect(redirectUrl)
     }
@@ -70,10 +70,37 @@ export default class Wechat {
         let authPageToken:any = await wechat.getAuthPageToken(req.query.code)
         let updateAuthPageTokens:any = await wechat.updateAuthPageToken(stringToObject(authPageToken).refresh_token)
         updateAuthPageTokens = stringToObject(updateAuthPageTokens)
-        console.log('updateAuthPageTokens',updateAuthPageTokens)
+        // console.log('updateAuthPageTokens',updateAuthPageTokens)
         let userinfo = await wechat.getUser(updateAuthPageTokens.access_token,updateAuthPageTokens.openid)
-        console.log('userinfo',userinfo)
-        res.send('成功')
+        // console.log('userinfo',userinfo)
+        // 微信关注的逻辑处理
+        let userinfoObj = stringToObject(userinfo)
+        // access_token is invalid or not latest, 重新进入
+        if (userinfoObj.errcode === 40001) {
+            res.redirect('/');
+            return;
+        }
+        if (userinfoObj.openid) {
+            // Users.findOne({
+            //     openid:userinfoObj.openid
+            // }).then((res:any) => {
+            //     console.log('res',res)
+            //     // if(!res) {
+            //     //     Users.create(userinfoObj)
+            //     // }
+            //     // res.nickname = '11111111'
+            //     res.save()
+            // })
+            Users.update({
+                nickname: 'XQ2',
+            }, {
+                nickname: 'XQ',
+            }).then((res) => {
+                console.log('res',res)
+            });
+            res.send('成功')
+        }
+
     }
     // 获取openId和网页授权token
     getAuthPageToken(code:string) {
@@ -90,7 +117,6 @@ export default class Wechat {
     }
     // 刷新网页授权token
     updateAuthPageToken(refreshToken:string) {
-        console.log('refreshToken',refreshToken)
         return new Promise((resolve,reject) => {
             fetch({
                 url:`${config.wechat.prefixApi}/sns/oauth2/refresh_token?appid=${config.wechat.appID}&grant_type=refresh_token&refresh_token=${refreshToken}`,

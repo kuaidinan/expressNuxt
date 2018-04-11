@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 import * as history from 'connect-history-api-fallback';
 import * as path from 'path';
 // import * as Redis from 'ioredis';
-var Redis = require('ioredis')
-// import Wechat,{ startCreateMenu } from './controller/wechat/index'
+let Redis = require('ioredis')
 const { Nuxt, Builder } = require('nuxt')
 
 const app = express();

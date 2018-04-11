@@ -11,8 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils_1 = require("../../common/utils");
 const index_1 = require("../common/index");
 const auth_1 = require("../../common/auth");
-const iconv = require('iconv-lite');
-const sha1 = require('sha1');
+const user_1 = require("../../models/wechat/user");
 const config = require('config-lite')(__dirname);
 const auth = new auth_1.default();
 class Wechat {
@@ -82,10 +81,22 @@ class Wechat {
             let authPageToken = yield wechat.getAuthPageToken(req.query.code);
             let updateAuthPageTokens = yield wechat.updateAuthPageToken(utils_1.stringToObject(authPageToken).refresh_token);
             updateAuthPageTokens = utils_1.stringToObject(updateAuthPageTokens);
-            console.log('updateAuthPageTokens', updateAuthPageTokens);
             let userinfo = yield wechat.getUser(updateAuthPageTokens.access_token, updateAuthPageTokens.openid);
-            console.log('userinfo', userinfo);
-            res.send('成功');
+            let userinfoObj = utils_1.stringToObject(userinfo);
+            if (userinfoObj.errcode === 40001) {
+                res.redirect('/');
+                return;
+            }
+            if (userinfoObj.openid) {
+                user_1.default.update({
+                    nickname: 'XQ2',
+                }, {
+                    nickname: 'XQ',
+                }).then((res) => {
+                    console.log('res', res);
+                });
+                res.send('成功');
+            }
         });
     }
     getAuthPageToken(code) {
@@ -101,7 +112,6 @@ class Wechat {
         });
     }
     updateAuthPageToken(refreshToken) {
-        console.log('refreshToken', refreshToken);
         return new Promise((resolve, reject) => {
             utils_1.fetch({
                 url: `${config.wechat.prefixApi}/sns/oauth2/refresh_token?appid=${config.wechat.appID}&grant_type=refresh_token&refresh_token=${refreshToken}`,
