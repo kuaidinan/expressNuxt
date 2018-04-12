@@ -2,8 +2,8 @@
 
 import { Request,Response,NextFunction } from 'express';
 import * as HttpRequest from "request";
-import { sign,fetch,saveRedis,getRedis,stringToObject } from '../../common/utils';
-import { getAccessToken } from '../common/index';
+import { sign,fetch,saveRedis,getRedis,stringToObject,signJSDK } from '../../common/utils';
+import { getAccessToken,getJSApiTicket } from '../common/index';
 import { resolve } from 'path';
 import Auth from '../../common/auth';
 import Users from '../../models/wechat/user'
@@ -11,28 +11,7 @@ const config = require('config-lite')(__dirname);
 const auth = new Auth()
 
 export default class Wechat {
-    // 获取access_token
-    getAccessToken() {
-        return new Promise((resolve,reject) => {
-            fetch({
-                method: "get",
-                url: `${config.wechat.prefix}/token?grant_type=client_credential&appid=${config.wechat.appID}&secret=${config.wechat.appSecret}`,
-            }).then((result:any) => {
-                var json:any;
-                
-                json = JSON.parse(result);
-                if (!json.access_token || json.errorcode) {
-                    reject(json);
-                    return;
-                }
-                json["timeStamp"] = Date.now();
-                resolve(json);
-            }).catch((error) => {
-                reject(error)
-                throw new Error(error)
-            })
-        })
-    }
+    // 微信签名 测试号用
     async sign(req:Request,res:Response) {
         sign(req,res)
     }
@@ -69,6 +48,7 @@ export default class Wechat {
         const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack')
         res.redirect(redirectUrl)
     }
+    // 微信授权回调接口
     async callBack(req:Request,res:Response,next:NextFunction) {
         const wechat = new Wechat();
         let authPageToken:any = await wechat.getAuthPageToken(req.query.code)
@@ -89,24 +69,21 @@ export default class Wechat {
                 openid:userinfoObj.openid
             }).then((result:any) => {
                 if(!result) {
+                    // 新用户
                     Users.create(userinfoObj)
-                        .then(() => {
-                            res.send('成功')
+                        .then((createResult) => {
+                            res.redirect('/activity/pingteam')
                         })
                         .catch((err) => {
                             throw new Error(err);
                         })
+                } else {
+                    // 老用户
+                    res.redirect('/activity/pingteam')
                 }
             }).catch((err) => {
                 throw new Error(err);
             })
-            // Users.update({
-            //     nickname: 'XQ2',
-            // }, {
-            //     nickname: 'XQ',
-            // }).then((res) => {
-            //     console.log('res',res)
-            // });
         }
 
     }
@@ -146,6 +123,26 @@ export default class Wechat {
         }).catch((error) => {
             return Promise.reject(error)
         })
+    }
+    // 获取JSSDK签名
+    async getSignature(req:Request,res:Response) {
+        let temp:any = {};
+        let href = req.body.href;
+        let ticket = await getJSApiTicket();
+        let noncestr = Math.random().toString(36).substr(2,15);
+        let timestamp = Math.floor(Date.now() / 1000);
+        temp = {
+            href,ticket,noncestr,timestamp
+        }
+        let jsapi_ticket = signJSDK(temp);
+
+        let result = {
+            timestamp,
+            noncestr,
+            jsapi_ticket
+        };
+        
+        res.send(result)
     }
 }
 

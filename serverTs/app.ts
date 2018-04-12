@@ -1,8 +1,10 @@
 const express = require('express')
-import { Request,Response,NextFunction } from 'express'
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
+import { Request,Response,NextFunction } from 'express'
 import * as history from 'connect-history-api-fallback';
 import * as path from 'path';
+import { startCreateMenu } from './controller/wechat/index'
 // import * as Redis from 'ioredis';
 let Redis = require('ioredis')
 const { Nuxt, Builder } = require('nuxt')
@@ -13,6 +15,9 @@ const port = process.env.PORT || 3000
 
 app.set('port', port)
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 const config = require('config-lite')(__dirname);
 
 app.all('*', (req:Request, res:Response, next:NextFunction) => {
@@ -21,7 +26,7 @@ app.all('*', (req:Request, res:Response, next:NextFunction) => {
 	res.header("Access-Control-Allow-Origin", '*');
 	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  	res.header("Access-Control-Allow-Credentials", 'true'); //可以带cookies
+	res.header("Access-Control-Allow-Credentials", 'true'); //可以带cookies
 	res.header("X-Powered-By", '3.2.1')
 	res.header("Content-Type", 'text/html; charset=utf-8')
 	res.header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.65 Safari/537.36');

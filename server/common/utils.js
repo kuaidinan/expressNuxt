@@ -22,6 +22,17 @@ function sign(req, res) {
     }
 }
 exports.sign = sign;
+function signJSDK(option) {
+    var temp = {};
+    var newkeys = Object.keys(option);
+    newkeys.sort();
+    var str = '';
+    newkeys.forEach((key) => {
+        str += key.toLowerCase() + '=' + option[key] + '&';
+    });
+    return sha1(str);
+}
+exports.signJSDK = signJSDK;
 function fetch(option) {
     return new Promise((resolve, reject) => {
         request(Object.assign({ gzip: true }, option), (error, res, body) => {

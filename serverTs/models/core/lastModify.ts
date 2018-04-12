@@ -14,9 +14,7 @@ interface newDocument extends mongoose.Document {
 module.exports = exports = function lastModifiedPlugin (schema:mongoose.Schema, options:PluginOptions)  {
   schema.add({ lastMod: Date })
 
-  console.log('2',this)
   schema.pre('save', function (this:newDocument,next) {
-    console.log('111',this)
     this.lastMod = new Date
     next()
   })

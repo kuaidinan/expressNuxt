@@ -2,12 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 let Redis = require('ioredis');
 const { Nuxt, Builder } = require('nuxt');
 const app = express();
 const host = process.env.HOST || '127.0.0.1';
 const port = process.env.PORT || 3000;
 app.set('port', port);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 const config = require('config-lite')(__dirname);
 app.all('*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", '*');

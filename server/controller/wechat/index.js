@@ -15,26 +15,6 @@ const user_1 = require("../../models/wechat/user");
 const config = require('config-lite')(__dirname);
 const auth = new auth_1.default();
 class Wechat {
-    getAccessToken() {
-        return new Promise((resolve, reject) => {
-            utils_1.fetch({
-                method: "get",
-                url: `${config.wechat.prefix}/token?grant_type=client_credential&appid=${config.wechat.appID}&secret=${config.wechat.appSecret}`,
-            }).then((result) => {
-                var json;
-                json = JSON.parse(result);
-                if (!json.access_token || json.errorcode) {
-                    reject(json);
-                    return;
-                }
-                json["timeStamp"] = Date.now();
-                resolve(json);
-            }).catch((error) => {
-                reject(error);
-                throw new Error(error);
-            });
-        });
-    }
     sign(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             utils_1.sign(req, res);
@@ -93,12 +73,15 @@ class Wechat {
                 }).then((result) => {
                     if (!result) {
                         user_1.default.create(userinfoObj)
-                            .then(() => {
-                            res.send('成功');
+                            .then((createResult) => {
+                            res.redirect('/activity/pingteam');
                         })
                             .catch((err) => {
                             throw new Error(err);
                         });
+                    }
+                    else {
+                        res.redirect('/activity/pingteam');
                     }
                 }).catch((err) => {
                     throw new Error(err);
@@ -140,6 +123,25 @@ class Wechat {
             }).catch((error) => {
                 return Promise.reject(error);
             });
+        });
+    }
+    getSignature(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let temp = {};
+            let href = req.body.href;
+            let ticket = yield index_1.getJSApiTicket();
+            let noncestr = Math.random().toString(36).substr(2, 15);
+            let timestamp = Math.floor(Date.now() / 1000);
+            temp = {
+                href, ticket, noncestr, timestamp
+            };
+            let jsapi_ticket = utils_1.signJSDK(temp);
+            let result = {
+                timestamp,
+                noncestr,
+                jsapi_ticket
+            };
+            res.send(result);
         });
     }
 }

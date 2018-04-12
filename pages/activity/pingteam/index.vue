@@ -1,12 +1,14 @@
 <template>
   <section class="container">
-    123
+    <div class="book">book</div>
   </section>
 </template>
 
 <script>
 export default {
+  mounted() {
 
+  }
 }
 </script>
 <style lang="less">

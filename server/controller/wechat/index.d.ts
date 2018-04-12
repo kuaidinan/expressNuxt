@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 export default class Wechat {
-    getAccessToken(): Promise<{}>;
     sign(req: Request, res: Response): Promise<void>;
     getMenu(req: Request, res: Response): Promise<void>;
     createMenu(): Promise<{}>;
@@ -9,5 +8,6 @@ export default class Wechat {
     getAuthPageToken(code: string): Promise<{}>;
     updateAuthPageToken(refreshToken: string): Promise<{}>;
     getUser(accessToken: string, openid: string): Promise<{}>;
+    getSignature(req: Request, res: Response): Promise<void>;
 }
 export declare function startCreateMenu(): Promise<void>;

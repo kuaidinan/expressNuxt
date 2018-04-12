@@ -21,6 +21,17 @@ export function sign(req:Request,res:Response) {
     } 
 }
 
+export function signJSDK(option:any) {
+    var temp:any = {};
+    var newkeys = Object.keys(option);
+    newkeys.sort();
+    var str = '';
+    newkeys.forEach((key) => {
+        str += key.toLowerCase() + '=' + option[key] + '&'
+    })
+    return sha1(str)
+}
+
 export function fetch(option:any) {
     return new Promise((resolve,reject) => {
         request(
