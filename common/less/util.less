@@ -1,0 +1,76 @@
+
+.flexbox {
+    display: -webkit-box!important;
+    display: -webkit-flex!important;
+    display: -ms-flexbox!important;
+    display: flex!important;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.flex(@number) {
+    -webkit-box-flex: @number;
+    -webkit-flex: @number;
+    -ms-flex: @number;
+    flex: @number;
+}
+
+
+.clearfix() {
+    &:before, &:after {
+        display: table;
+        content: "";
+        line-height: 0;
+        height: 0;
+        vertical-align: baseline;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+.clearfix-b{
+    overflow: hidden;
+}
+
+.wh(@w, @h){
+    width: @w/@REM;
+    height: @h/@REM;
+};
+
+.transition(@prop) {
+    -webkit-transition: @prop;
+    transition: @prop;
+}
+
+.transform(@prop) {
+    -webkit-transform: @prop;
+    transform: @prop;
+}
+
+.userSelect(@prop) {
+    -moz-user-select: @prop;
+    -webkit-user-select: @prop;
+    -ms-user-select: @prop;
+    user-select: @prop;
+}
+
+.animated( @animateName, @delay, @duration, @fillMode: both, @count: 1, @direction: normal, @func:linear){
+    -webkit-animation-name:         @animateName;     
+    -webkit-animation-delay:        @delay;
+    -webkit-animation-duration:     @duration;
+    -webkit-animation-fill-mode:    @fillMode;
+    -webkit-animation-direction:    @direction;
+    -webkit-animation-iteration-count: @count;
+    -webkit-animation-timing-function: @func;
+    
+    animation-name:         @animateName;    
+    animation-delay:        @delay;
+    animation-duration:     @duration;
+    animation-fill-mode:    @fillMode;
+    animation-direction:    @direction;
+    animation-iteration-count: @count;
+    animation-timing-function: @func;
+    visibility: visible !important;
+}

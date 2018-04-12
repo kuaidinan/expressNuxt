@@ -88,14 +88,21 @@ class Wechat {
                 return;
             }
             if (userinfoObj.openid) {
-                user_1.default.update({
-                    nickname: 'XQ2',
-                }, {
-                    nickname: 'XQ',
-                }).then((res) => {
-                    console.log('res', res);
+                user_1.default.findOne({
+                    openid: userinfoObj.openid
+                }).then((result) => {
+                    if (!result) {
+                        user_1.default.create(userinfoObj)
+                            .then(() => {
+                            res.send('成功');
+                        })
+                            .catch((err) => {
+                            throw new Error(err);
+                        });
+                    }
+                }).catch((err) => {
+                    throw new Error(err);
                 });
-                res.send('成功');
             }
         });
     }

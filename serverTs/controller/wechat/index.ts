@@ -11,6 +11,7 @@ const config = require('config-lite')(__dirname);
 const auth = new Auth()
 
 export default class Wechat {
+    // 获取access_token
     getAccessToken() {
         return new Promise((resolve,reject) => {
             fetch({
@@ -35,6 +36,7 @@ export default class Wechat {
     async sign(req:Request,res:Response) {
         sign(req,res)
     }
+    // 获取微信菜单
     public async getMenu(req:Request,res:Response) {
         const token = await getAccessToken()
         fetch({
@@ -47,6 +49,7 @@ export default class Wechat {
             return Promise.reject(error)
         })
     }
+    // 创建微信菜单
     public async createMenu() {
         const token = await getAccessToken()
         return fetch({
@@ -60,6 +63,7 @@ export default class Wechat {
             return Promise.reject(error)
         })
     }
+    // 微信授权
     public async requestAuth(req:Request,res:Response) {
         // 微信回调接口
         const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack')
@@ -81,24 +85,28 @@ export default class Wechat {
             return;
         }
         if (userinfoObj.openid) {
-            // Users.findOne({
-            //     openid:userinfoObj.openid
-            // }).then((res:any) => {
+            Users.findOne({
+                openid:userinfoObj.openid
+            }).then((result:any) => {
+                if(!result) {
+                    Users.create(userinfoObj)
+                        .then(() => {
+                            res.send('成功')
+                        })
+                        .catch((err) => {
+                            throw new Error(err);
+                        })
+                }
+            }).catch((err) => {
+                throw new Error(err);
+            })
+            // Users.update({
+            //     nickname: 'XQ2',
+            // }, {
+            //     nickname: 'XQ',
+            // }).then((res) => {
             //     console.log('res',res)
-            //     // if(!res) {
-            //     //     Users.create(userinfoObj)
-            //     // }
-            //     // res.nickname = '11111111'
-            //     res.save()
-            // })
-            Users.update({
-                nickname: 'XQ2',
-            }, {
-                nickname: 'XQ',
-            }).then((res) => {
-                console.log('res',res)
-            });
-            res.send('成功')
+            // });
         }
 
     }

@@ -1,0 +1,53 @@
+@import "variable.less";
+@import "util.less";
+@import "reset.less";
+@import "iconfont.less";
+@import "layout.less";
+
+html{ 
+    font-size: @BASE_FONT_SIZE / 16 * 100%;   
+}
+html, body{ 
+    height:100%;
+    width:100%; 
+    -webkit-text-size-adjust:none;
+}
+
+body{
+    font-size:14/@REM;
+    line-height: 1;
+    font-family: Dengxian, "Helvetica Neue", Helvetica, STHeiTi, sans-serif, 'Microsoft YaHei UI','Microsoft YaHei';
+    // background: #ededed;  
+}
+a{
+    text-decoration: none;  
+}
+a, img {
+    &, &:focus, &:active{
+        -webkit-touch-callout: none; /* 禁止长按链接与图片弹出菜单 */
+        -webkit-user-select: none!important;
+    }
+}
+
+a, button{
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.fitScreen(320px); 
+.fitScreen(340px); 
+.fitScreen(360px);
+.fitScreen(380px);
+.fitScreen(480px);
+.fitScreen(640px);
+ 
+ 
+////////////////////////////////////////////////////////////////
+.fitScreen (@minWidth) {
+    @media only screen and (min-width:@minWidth) {
+        html{
+            font-size: ( @minWidth / @PAGE_BASE_WIDTH ) * @BASE_FONT_SIZE;
+        }
+    }
+}
