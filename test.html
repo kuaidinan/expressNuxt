@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var a = 'config'
+    class Mytest {
+      constructor() {
+        console.log('constructor',this)
+        this.CONFIG = a;
+      }
+      print() {
+        console.log(a)
+      }
+      printThis() {
+        console.log('printThis',this)
+      }
+    }
+    let bb = new Mytest();
+    bb.print()
+    bb.printThis()
+  </script>
+</body>
+</html>

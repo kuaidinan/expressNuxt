@@ -5,15 +5,16 @@ import { Request,Response,NextFunction } from 'express'
 import * as history from 'connect-history-api-fallback';
 import * as path from 'path';
 import { startCreateMenu } from './controller/wechat/index'
-// import * as Redis from 'ioredis';
+import * as cookieParser from 'cookie-parser';
 let Redis = require('ioredis')
 const { Nuxt, Builder } = require('nuxt')
 
 const app = express();
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
-
 app.set('port', port)
+
+app.use(cookieParser());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

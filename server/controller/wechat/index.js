@@ -74,6 +74,9 @@ class Wechat {
                     if (!result) {
                         user_1.default.create(userinfoObj)
                             .then((createResult) => {
+                            res.cookie('pingTeam', userinfoObj.openid, {
+                                expires: new Date(new Date().getTime() + 30 * 24 * 3600 * 1000)
+                            });
                             res.redirect('/activity/pingteam');
                         })
                             .catch((err) => {
@@ -81,6 +84,9 @@ class Wechat {
                         });
                     }
                     else {
+                        res.cookie('pingTeam', userinfoObj.openid, {
+                            expires: new Date(new Date().getTime() + 30 * 24 * 3600 * 1000)
+                        });
                         res.redirect('/activity/pingteam');
                     }
                 }).catch((err) => {
@@ -128,12 +134,15 @@ class Wechat {
     getSignature(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let temp = {};
-            let href = req.body.href;
+            let url = req.body.href;
             let ticket = yield index_1.getJSApiTicket();
             let noncestr = Math.random().toString(36).substr(2, 15);
             let timestamp = Math.floor(Date.now() / 1000);
             temp = {
-                href, ticket, noncestr, timestamp
+                url,
+                jsapi_ticket: ticket,
+                noncestr,
+                timestamp
             };
             let jsapi_ticket = utils_1.signJSDK(temp);
             let result = {

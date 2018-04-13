@@ -28,8 +28,9 @@ function signJSDK(option) {
     newkeys.sort();
     var str = '';
     newkeys.forEach((key) => {
-        str += key.toLowerCase() + '=' + option[key] + '&';
+        str += '&' + key.toLowerCase() + '=' + option[key];
     });
+    str = str.substr(1);
     return sha1(str);
 }
 exports.signJSDK = signJSDK;

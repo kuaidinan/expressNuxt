@@ -72,6 +72,9 @@ export default class Wechat {
                     // 新用户
                     Users.create(userinfoObj)
                         .then((createResult) => {
+                            res.cookie('pingTeam',userinfoObj.openid,{
+                                expires:new Date(new Date().getTime() + 30 * 24 * 3600 * 1000)
+                            })
                             res.redirect('/activity/pingteam')
                         })
                         .catch((err) => {
@@ -79,6 +82,9 @@ export default class Wechat {
                         })
                 } else {
                     // 老用户
+                    res.cookie('pingTeam',userinfoObj.openid,{
+                        expires:new Date(new Date().getTime() + 30 * 24 * 3600 * 1000)
+                    })
                     res.redirect('/activity/pingteam')
                 }
             }).catch((err) => {
@@ -127,12 +133,15 @@ export default class Wechat {
     // 获取JSSDK签名
     async getSignature(req:Request,res:Response) {
         let temp:any = {};
-        let href = req.body.href;
+        let url = req.body.href;
         let ticket = await getJSApiTicket();
         let noncestr = Math.random().toString(36).substr(2,15);
         let timestamp = Math.floor(Date.now() / 1000);
         temp = {
-            href,ticket,noncestr,timestamp
+            url,
+            jsapi_ticket:ticket,
+            noncestr,
+            timestamp
         }
         let jsapi_ticket = signJSDK(temp);
 
@@ -141,7 +150,7 @@ export default class Wechat {
             noncestr,
             jsapi_ticket
         };
-        
+
         res.send(result)
     }
 }
