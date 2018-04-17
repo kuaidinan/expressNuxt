@@ -57,6 +57,7 @@ class Wechat {
     }
     callBack(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('req.query.code', req.query);
             const wechat = new Wechat();
             let authPageToken = yield wechat.getAuthPageToken(req.query.code);
             let updateAuthPageTokens = yield wechat.updateAuthPageToken(utils_1.stringToObject(authPageToken).refresh_token);

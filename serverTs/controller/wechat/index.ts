@@ -50,6 +50,7 @@ export default class Wechat {
     }
     // 微信授权回调接口
     async callBack(req:Request,res:Response,next:NextFunction) {
+        console.log('req.query.code',req.query)
         const wechat = new Wechat();
         let authPageToken:any = await wechat.getAuthPageToken(req.query.code)
         let updateAuthPageTokens:any = await wechat.updateAuthPageToken(stringToObject(authPageToken).refresh_token)
