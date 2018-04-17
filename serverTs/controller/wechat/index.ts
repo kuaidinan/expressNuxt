@@ -11,9 +11,14 @@ const config = require('config-lite')(__dirname);
 const auth = new Auth()
 
 export default class Wechat {
-    // 微信签名 测试号用
+    // 微信模板消息
     async sign(req:Request,res:Response) {
         sign(req,res)
+    }
+    // 微信模板消息post
+    async signPost(req:Request,res:Response) {
+        console.log('req.body',req.body);
+        res.send('11')
     }
     // 获取微信菜单
     public async getMenu(req:Request,res:Response) {

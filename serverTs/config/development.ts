@@ -25,7 +25,7 @@ module.exports = {
     wechat: {
         "appID": "wx6ec464893a6c970e",
         "appSecret": "40c415d310b81e73476a8d8a0673869a",
-        "token": "wxexpress",
+        "token": "001f9a2b7f5ad49f6194ca150f97cb3q",
         "prefixApi": "https://api.weixin.qq.com",
         "prefix": "https://api.weixin.qq.com/cgi-bin",
         "mpPrefix": "https://mp.weixin.qq.com/cgi-bin",

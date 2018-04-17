@@ -20,6 +20,12 @@ class Wechat {
             utils_1.sign(req, res);
         });
     }
+    signPost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('req.body', req.body);
+            res.send('11');
+        });
+    }
     getMenu(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const token = yield index_1.getAccessToken();
