@@ -12,6 +12,7 @@ const port = process.env.PORT || 3000;
 app.set('port', port);
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(bodyParser.text({ type: 'text/xml' }));
 app.use(bodyParser.urlencoded({ extended: false }));
 const config = require('config-lite')(__dirname);
 app.all('*', (req, res, next) => {

@@ -2,6 +2,7 @@
 
 import { Request,Response,NextFunction } from 'express';
 import * as HttpRequest from "request";
+import * as XmlParse from 'pixl-xml';
 import { sign,fetch,saveRedis,getRedis,stringToObject,signJSDK } from '../../common/utils';
 import { getAccessToken,getJSApiTicket } from '../common/index';
 import { resolve } from 'path';
@@ -15,10 +16,40 @@ export default class Wechat {
     async sign(req:Request,res:Response) {
         sign(req,res)
     }
-    // 微信模板消息post
-    async signPost(req:Request,res:Response) {
-        console.log('req.body',req.body);
-        res.send('11')
+    // 微信模板消息各个事件
+    async signPost(req:any,res:Response) {
+        let reqXml = XmlParse.parse(req.body);
+        res.set("Content-Type", "text/xml");
+        if(reqXml.Content === '1') {
+            let message =`<xml>
+                <ToUserName><![CDATA[${ reqXml.FromUserName}]]></ToUserName>
+                <FromUserName><![CDATA[${ reqXml.ToUserName}]]></FromUserName>
+                <CreateTime>${Date.now()}</CreateTime>
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[123]]></Content>
+            </xml>`
+            res.send(message)
+        } else if (reqXml.Content === '2') {
+            let message = 
+            `<xml>
+            <ToUserName><![CDATA[${ reqXml.FromUserName}]]></ToUserName>
+            <FromUserName><![CDATA[${ reqXml.ToUserName}]]></FromUserName>
+            <CreateTime>${ Date.now()}</CreateTime>
+            <MsgType><![CDATA[news]]></MsgType>
+            <ArticleCount>1</ArticleCount>
+            <Articles>
+            <item>
+            <Title><![CDATA[${'标题'}]]></Title> 
+            <Description><![CDATA[${'网络图片'}]]></Description>
+            <PicUrl><![CDATA[http://img.zcool.cn/community/0142135541fe180000019ae9b8cf86.jpg@1280w_1l_2o_100sh.png]]></PicUrl>
+            <Url><![CDATA[${'url'}]]></Url>
+            </item>
+            </Articles>
+            </xml>`
+            res.send(message)
+        }else {
+            res.send('')
+        }
     }
     // 获取微信菜单
     public async getMenu(req:Request,res:Response) {

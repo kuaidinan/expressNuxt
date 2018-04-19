@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 export default class Wechat {
     sign(req: Request, res: Response): Promise<void>;
-    signPost(req: Request, res: Response): Promise<void>;
+    signPost(req: any, res: Response): Promise<void>;
     getMenu(req: Request, res: Response): Promise<void>;
     createMenu(): Promise<{}>;
     requestAuth(req: Request, res: Response): Promise<void>;

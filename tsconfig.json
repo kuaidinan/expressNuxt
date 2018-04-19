@@ -22,5 +22,8 @@
     "exclude": [
         "dist",
         "node_modules"
+    ],
+    "files": [
+        "typing/pixl-xml/pixl-xml.d.ts"
     ]
 }

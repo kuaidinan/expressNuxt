@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const XmlParse = require("pixl-xml");
 const utils_1 = require("../../common/utils");
 const index_1 = require("../common/index");
 const auth_1 = require("../../common/auth");
@@ -22,8 +23,39 @@ class Wechat {
     }
     signPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('req.body', req.body);
-            res.send('11');
+            let reqXml = XmlParse.parse(req.body);
+            res.set("Content-Type", "text/xml");
+            if (reqXml.Content === '1') {
+                let message = `<xml>
+                <ToUserName><![CDATA[${reqXml.FromUserName}]]></ToUserName>
+                <FromUserName><![CDATA[${reqXml.ToUserName}]]></FromUserName>
+                <CreateTime>${Date.now()}</CreateTime>
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[123]]></Content>
+            </xml>`;
+                res.send(message);
+            }
+            else if (reqXml.Content === '2') {
+                let message = `<xml>
+            <ToUserName><![CDATA[${reqXml.FromUserName}]]></ToUserName>
+            <FromUserName><![CDATA[${reqXml.ToUserName}]]></FromUserName>
+            <CreateTime>${Date.now()}</CreateTime>
+            <MsgType><![CDATA[news]]></MsgType>
+            <ArticleCount>1</ArticleCount>
+            <Articles>
+            <item>
+            <Title><![CDATA[${'标题'}]]></Title> 
+            <Description><![CDATA[${'网络图片'}]]></Description>
+            <PicUrl><![CDATA[http://img.zcool.cn/community/0142135541fe180000019ae9b8cf86.jpg@1280w_1l_2o_100sh.png]]></PicUrl>
+            <Url><![CDATA[${'url'}]]></Url>
+            </item>
+            </Articles>
+            </xml>`;
+                res.send(message);
+            }
+            else {
+                res.send('');
+            }
         });
     }
     getMenu(req, res) {
