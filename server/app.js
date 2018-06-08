@@ -6,15 +6,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");
 let Redis = require('ioredis');
 const { Nuxt, Builder } = require('nuxt');
+const config = require('config-lite')(__dirname);
 const app = express();
-const host = process.env.HOST || '127.0.0.1';
-const port = process.env.PORT || 3000;
-app.set('port', port);
+const host = config.host || '127.0.0.1';
+const port = config.port || 3000;
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.text({ type: 'text/xml' }));
 app.use(bodyParser.urlencoded({ extended: false }));
-const config = require('config-lite')(__dirname);
 app.all('*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
@@ -47,4 +46,5 @@ if (nuxtConfig.dev) {
 }
 app.use(nuxt.render);
 app.listen(port, host);
+console.log(`my server is start,${host}:${port}`);
 //# sourceMappingURL=app.js.map

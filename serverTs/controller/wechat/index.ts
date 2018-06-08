@@ -82,6 +82,7 @@ export default class Wechat {
     public async requestAuth(req:Request,res:Response) {
         // 微信回调接口
         const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack')
+        console.log('redirectUrl',redirectUrl)
         res.redirect(redirectUrl)
     }
     // 微信授权回调接口

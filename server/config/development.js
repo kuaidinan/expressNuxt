@@ -1,8 +1,9 @@
 'use strict';
 module.exports = {
-    port: 3000,
+    port: 8083,
+    host: '0.0.0.0',
     url: 'mongodb://xuqiangadmin:wojiaoxq251980@47.104.26.54:27017/wechat?authSource=admin',
-    domain: 'http://wechat.xuqiang.site',
+    domain: 'http://192.168.6.125:8083',
     session: {
         name: 'mynode',
         secret: 'mynode',

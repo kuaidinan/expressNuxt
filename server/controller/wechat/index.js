@@ -90,6 +90,7 @@ class Wechat {
     requestAuth(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const redirectUrl = auth.requestUrl(config.domain + '/api/wechat/callBack');
+            console.log('redirectUrl', redirectUrl);
             res.redirect(redirectUrl);
         });
     }
