@@ -5,7 +5,7 @@
       <div>拼团中</div>
       <button @click="qrImg()">邀请好友参团</button>
     </section>
-    <img src="" id="srcImg"></img>
+    <img src="" id="srcImg">
     <div class="test" v-show="false">
       <canvas id="canvas"></canvas>
     </div>
@@ -15,6 +15,7 @@
   import Vue from 'vue'
   import QRCode from 'qrcode'
   import config from '~/common/js/config.js'
+  import { sendEmail } from '~/common/js/api/connect/sendEmail.js'
   Vue.use(QRCode);
   export default {
     name:'payment',
@@ -26,6 +27,10 @@
     },
     methods:{
       qrImg(){
+        sendEmail().then(result => {
+          console.log('111',result)
+        })
+        
         var that = this;
         var canvas = document.getElementById('canvas')
         QRCode.toCanvas(canvas, `${this.url}?openID=${this.getCookie('pingTeam')}`, function (error) {

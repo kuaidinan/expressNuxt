@@ -9,7 +9,7 @@
       </footer>
     </div>
     <!-- 拼团分享页面 -->
-    <div class="share" v-show="shareFlag" @click="shareFlag=false">
+    <div class="share" v-show="shareFlag" @click="showPing()">
       点我分享
     </div>
   </section>
